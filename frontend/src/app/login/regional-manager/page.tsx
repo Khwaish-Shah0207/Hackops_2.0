@@ -201,7 +201,7 @@ export default function RegionalManagerLoginPage() {
         </div>
 
         {/* Cross portal links */}
-        <div className="flex items-center justify-between text-xs text-slate-500 px-2">
+        <div className="flex items-center justify-between text-xs text-slate-400 px-2">
           <Link
             href="/login/citizen"
             className="hover:text-slate-300 hover:underline transition-colors"

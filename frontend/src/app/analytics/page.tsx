@@ -69,39 +69,39 @@ export default function AnalyticsPage() {
   return (
     <div className="space-y-8">
       {/* Page Header */}
-      <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-        <div className="flex items-center space-x-2 text-emerald-600 text-xs font-bold uppercase tracking-wider">
+      <div className="bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-800 shadow-sm space-y-2">
+        <div className="flex items-center space-x-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
           <BarChart3 className="w-4 h-4" />
           <span>Scientific Apportionment & Trends</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
           Environmental Intelligence & Analytics
         </h1>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-300">
           Real-time sensor anomalies, historical ambient fluctuations, and chemical fingerprint comparisons from CPCB and EPA SPECIATE reference libraries.
         </p>
       </div>
 
       {loading ? (
         <div className="p-16 text-center text-slate-400">
-          <RefreshCw className="w-8 h-8 animate-spin mx-auto text-emerald-600 mb-2" />
+          <RefreshCw className="w-8 h-8 animate-spin mx-auto text-emerald-400 mb-2" />
           <span>Loading environmental intelligence datasets...</span>
         </div>
       ) : (
         <div className="space-y-8">
           {/* Chart 1: Historical Daily PM2.5 & PM10 Fluctuations */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="text-lg font-bold text-slate-900 flex items-center space-x-2">
-                  <TrendingUp className="w-5 h-5 text-emerald-600" />
+                <h3 className="text-lg font-bold text-white flex items-center space-x-2">
+                  <TrendingUp className="w-5 h-5 text-emerald-400" />
                   <span>Historical Daily Ambient Air Quality Data (30 Days)</span>
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-400">
                   Tracking daily particulate matter levels, temperature inversion peaks, and recurring episodes.
                 </p>
               </div>
-              <span className="text-xs bg-slate-100 text-slate-700 px-3 py-1 rounded-lg font-mono">
+              <span className="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-lg font-mono">
                 CPCB Baseline
               </span>
             </div>
@@ -131,13 +131,13 @@ export default function AnalyticsPage() {
 
           {/* Chart 2: Active Monitoring Station Readings & Isolation Forest Anomalies */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm space-y-4">
               <div className="space-y-1">
-                <h3 className="text-lg font-bold text-slate-900 flex items-center space-x-2">
+                <h3 className="text-lg font-bold text-white flex items-center space-x-2">
                   <Activity className="w-5 h-5 text-red-500" />
                   <span>Station PM2.5 & Anomaly Intensity</span>
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-400">
                   Unsupervised Isolation Forest detection identifying localized plume spikes.
                 </p>
               </div>
@@ -165,13 +165,13 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Radar Chart: EPA SPECIATE Source Profile Comparison */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm space-y-4">
               <div className="space-y-1">
-                <h3 className="text-lg font-bold text-slate-900 flex items-center space-x-2">
+                <h3 className="text-lg font-bold text-white flex items-center space-x-2">
                   <Layers className="w-5 h-5 text-purple-600" />
                   <span>EPA SPECIATE Chemical Fingerprint Signatures</span>
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-400">
                   Receptor chemical profile comparison (Open Waste Burning vs Biomass vs Vehicles).
                 </p>
               </div>

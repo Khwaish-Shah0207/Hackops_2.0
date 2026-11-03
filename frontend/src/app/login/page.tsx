@@ -35,10 +35,10 @@ export default function LoginPortalPage() {
             </div>
           </div>
           <div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
               Environmental Intelligence Portal
             </h1>
-            <p className="text-slate-500 text-sm mt-2 max-w-md mx-auto">
+            <p className="text-slate-400 text-sm mt-2 max-w-md mx-auto">
               Select your access authorization type to proceed to the designated interface.
             </p>
           </div>
@@ -54,7 +54,7 @@ export default function LoginPortalPage() {
           {/* ── Citizen / User Card ─────────────────────────────── */}
           <Link
             href="/login/citizen"
-            className="group bg-white rounded-2xl border-2 border-slate-200 hover:border-emerald-400 p-6 sm:p-7 shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between space-y-5"
+            className="group bg-slate-900 rounded-2xl border-2 border-slate-800 hover:border-emerald-400 p-6 sm:p-7 shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between space-y-5"
           >
             <div className="space-y-4">
               <div className="w-12 h-12 rounded-xl bg-emerald-100 group-hover:bg-emerald-200 flex items-center justify-center transition-colors">
@@ -62,21 +62,21 @@ export default function LoginPortalPage() {
               </div>
               <div>
                 <div className="flex items-center space-x-2">
-                  <h2 className="text-lg font-bold text-slate-900">Citizen / User</h2>
+                  <h2 className="text-lg font-bold text-white">Citizen / User</h2>
                   <span className="text-[10px] font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full uppercase tracking-wider">
                     Public
                   </span>
                 </div>
-                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                <p className="text-xs text-slate-300 mt-2 leading-relaxed">
                   Submit pollution reports with voice input, view automated AI investigation reports, and track community clean air compliance.
                 </p>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-100 space-y-3">
+            <div className="pt-4 border-t border-slate-800 space-y-3">
               <div className="text-[11px] text-slate-400">
-                <p className="font-semibold text-slate-500 text-xs mb-0.5">Demo credentials</p>
-                <p><span className="font-mono text-slate-600">citizen@enviro.gov</span> / <span className="font-mono text-slate-600">citizen123</span></p>
+                <p className="font-semibold text-slate-400 text-xs mb-0.5">Demo credentials</p>
+                <p><span className="font-mono text-slate-300">citizen@enviro.gov</span> / <span className="font-mono text-slate-300">citizen123</span></p>
               </div>
               <div className="flex items-center justify-between text-xs font-semibold text-emerald-700 group-hover:text-emerald-800">
                 <span>Sign in as Citizen</span>
@@ -108,7 +108,7 @@ export default function LoginPortalPage() {
             </div>
 
             <div className="pt-4 border-t border-slate-800 space-y-3">
-              <div className="text-[11px] text-slate-500">
+              <div className="text-[11px] text-slate-400">
                 <p className="font-semibold text-slate-400 text-xs mb-0.5">Demo credentials</p>
                 <p><span className="font-mono text-slate-400">officer@mpcb.gov.in</span> / <span className="font-mono text-slate-400">officer123</span></p>
               </div>

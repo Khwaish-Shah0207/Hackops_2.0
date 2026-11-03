@@ -76,14 +76,14 @@ export default function CitizenLoginPage() {
         {/* Back navigation */}
         <Link
           href="/login"
-          className="inline-flex items-center space-x-2 text-sm text-slate-500 hover:text-slate-800 transition-colors"
+          className="inline-flex items-center space-x-2 text-sm text-slate-400 hover:text-slate-200 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to portal selection</span>
         </Link>
 
         {/* Login card */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-slate-900 rounded-2xl border border-slate-800 shadow-sm overflow-hidden">
 
           {/* Emerald top accent stripe */}
           <div className="h-1.5 w-full bg-gradient-to-r from-emerald-500 to-teal-400" />
@@ -96,8 +96,8 @@ export default function CitizenLoginPage() {
                 <Users className="w-6 h-6 text-emerald-700" />
               </div>
               <div>
-                <h1 className="text-2xl font-extrabold text-slate-900">Citizen Login</h1>
-                <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+                <h1 className="text-2xl font-extrabold text-white">Citizen Login</h1>
+                <p className="text-sm text-slate-400 mt-1 leading-relaxed">
                   Sign in to submit complaints, track investigations, and submit resolution feedback.
                 </p>
               </div>
@@ -124,7 +124,7 @@ export default function CitizenLoginPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                   Email Address
                 </label>
                 <input
@@ -135,12 +135,12 @@ export default function CitizenLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                   Password
                 </label>
                 <div className="relative">
@@ -151,13 +151,13 @@ export default function CitizenLoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full px-4 py-2.5 pr-11 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition"
+                    className="w-full px-4 py-2.5 pr-11 rounded-xl border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition"
                   />
                   <button
                     type="button"
                     tabIndex={-1}
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 transition-colors"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -192,7 +192,7 @@ export default function CitizenLoginPage() {
           Are you a government authority?{' '}
           <Link
             href="/login/government"
-            className="text-slate-600 hover:text-slate-900 hover:underline font-medium transition-colors"
+            className="text-slate-300 hover:text-white hover:underline font-medium transition-colors"
           >
             Switch to Authority Login →
           </Link>

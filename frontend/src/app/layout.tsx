@@ -13,18 +13,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+    <html lang="en" className="dark">
+      <body className="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-white">
         <Navbar />
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {children}
         </main>
-        <footer className="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
+        <footer className="bg-slate-900/80 border-t border-slate-800 py-6 mt-12 text-center text-xs text-slate-400">
           <p>© 2026 Environmental Intelligence & Compliance System. Decision-support platform for municipal air quality & citizen incident tracking.</p>
-          <p className="mt-1 text-slate-400">Notice: This system provides explainable evidence-based decision support. It does not make automated legal declarations of guilt.</p>
+          <p className="mt-1 text-slate-500">Notice: This system provides explainable evidence-based decision support. It does not make automated legal declarations of guilt.</p>
         </footer>
       </body>
     </html>
   );
 }
-
