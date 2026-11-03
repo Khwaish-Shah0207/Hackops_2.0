@@ -1,0 +1,74 @@
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+backend/venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Next.js
+node_modules/
+.next/
+out/
+build/
+dist/
+.vercel/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDE and editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Uploaded files and generated data
+uploads/*
+!uploads/.gitkeep
+media/
+temp/
+tmp/
+
+# Model weights and large files
+*.pt
+*.pth
+*.onnx
+*.h5
+*.pkl
+*.joblib
+*.safetensors
+
+# Coverage
+htmlcov/
+.coverage
+coverage.xml
