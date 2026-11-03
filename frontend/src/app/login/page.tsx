@@ -3,13 +3,15 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Users, Shield, Wind, ArrowRight, Activity, BarChart3, Briefcase } from 'lucide-react';
+import MainNavigation from '@/components/shared/MainNavigation';
+import EditorialFooter from '@/components/shared/EditorialFooter';
 import { isAuthenticated, getUserRole } from '@/lib/auth';
+import { ArrowRightRefinedIcon } from '@/components/shared/CustomIcons';
 
 export default function LoginPortalPage() {
   const router = useRouter();
 
-  // If already logged in, skip the chooser and go straight to the right dashboard.
+  // Redirect authenticated users to their corresponding workspace
   useEffect(() => {
     if (isAuthenticated()) {
       const role = getUserRole();
@@ -21,149 +23,122 @@ export default function LoginPortalPage() {
         router.replace('/citizen');
       }
     }
-  }, []);
+  }, [router]);
 
   return (
-    <div className="min-h-[calc(100vh-220px)] flex items-center justify-center py-12">
-      <div className="w-full max-w-5xl space-y-8 px-4">
+    <div className="min-h-screen bg-forest-charcoal text-ivory-warm selection:bg-accent-orange selection:text-ivory-warm flex flex-col justify-between">
+      <MainNavigation />
 
-        {/* Page header */}
-        <div className="text-center space-y-4">
-          <div className="flex items-center justify-center">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/25">
-              <Wind className="w-7 h-7" />
-            </div>
+      <main className="max-w-6xl w-full mx-auto px-4 sm:px-6 py-24 space-y-12">
+        {/* Header */}
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <div className="inline-flex items-center space-x-2 border border-graphite-border px-3 py-1 bg-forest-dark text-[11px] font-mono text-sage-muted uppercase tracking-wider">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent-orange animate-pulse" />
+            <span>Role-Based Authentication Gateway</span>
           </div>
-          <div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Environmental Intelligence Portal
-            </h1>
-            <p className="text-slate-400 text-sm mt-2 max-w-md mx-auto">
-              Select your access authorization type to proceed to the designated interface.
-            </p>
-          </div>
-          <div className="inline-flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full text-xs text-emerald-700 font-medium">
-            <Activity className="w-3 h-3 animate-pulse" />
-            <span>Demonstration Scenario Active — Mumbai Eastern Suburbs Plume Corridor</span>
-          </div>
+          <h1 className="font-serif text-3xl sm:text-4xl text-ivory-warm">
+            Authorized Platform Gateways
+          </h1>
+          <p className="text-xs sm:text-sm font-mono text-sage-muted leading-relaxed">
+            Select your operational role to access the corresponding intelligence workspace and compliance tools.
+          </p>
         </div>
 
-        {/* 3 portal selection cards */}
+        {/* Three Role Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-          {/* ── Citizen / User Card ─────────────────────────────── */}
-          <Link
-            href="/login/citizen"
-            className="group bg-slate-900 rounded-2xl border-2 border-slate-800 hover:border-emerald-400 p-6 sm:p-7 shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between space-y-5"
-          >
+          {/* Role 1: Citizen */}
+          <div className="border border-graphite-border bg-forest-dark p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-accent-orange/70 transition-colors">
             <div className="space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-emerald-100 group-hover:bg-emerald-200 flex items-center justify-center transition-colors">
-                <Users className="w-6 h-6 text-emerald-700" />
+              <div className="flex items-center justify-between pb-3 border-b border-graphite-border/60">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-accent-green font-bold">
+                  Public Sector
+                </span>
+                <span className="font-mono text-[10px] text-sage-muted">Role: Citizen</span>
               </div>
-              <div>
-                <div className="flex items-center space-x-2">
-                  <h2 className="text-lg font-bold text-white">Citizen / User</h2>
-                  <span className="text-[10px] font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                    Public
-                  </span>
-                </div>
-                <p className="text-xs text-slate-300 mt-2 leading-relaxed">
-                  Submit pollution reports with voice input, view automated AI investigation reports, and track community clean air compliance.
-                </p>
+              <h2 className="font-serif text-xl sm:text-2xl text-ivory-warm">
+                Citizen Portal
+              </h2>
+              <p className="text-xs font-mono text-sage-muted leading-relaxed">
+                Submit geolocated pollution complaints with voice transcription, monitor live meteorological back-trajectories, and verify site enforcement resolution.
+              </p>
+              <div className="bg-forest-charcoal border border-graphite-border p-3 text-[11px] font-mono text-sage-muted space-y-1">
+                <span className="text-accent-orange uppercase font-bold block text-[10px]">Test Account:</span>
+                <div>citizen@enviro.gov / citizen123</div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-800 space-y-3">
-              <div className="text-[11px] text-slate-400">
-                <p className="font-semibold text-slate-400 text-xs mb-0.5">Demo credentials</p>
-                <p><span className="font-mono text-slate-300">citizen@enviro.gov</span> / <span className="font-mono text-slate-300">citizen123</span></p>
-              </div>
-              <div className="flex items-center justify-between text-xs font-semibold text-emerald-700 group-hover:text-emerald-800">
-                <span>Sign in as Citizen</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-          </Link>
+            <Link
+              href="/login/citizen"
+              className="w-full inline-flex items-center justify-between bg-forest-charcoal hover:bg-graphite-deep border border-graphite-border hover:border-accent-orange text-ivory-warm text-xs font-mono font-bold uppercase tracking-wider px-4 py-3 transition-colors"
+            >
+              <span>Sign In as Citizen</span>
+              <ArrowRightRefinedIcon className="w-3.5 h-3.5" />
+            </Link>
+          </div>
 
-          {/* ── Government Authority Card ────────────────────────── */}
-          <Link
-            href="/login/government"
-            className="group bg-slate-900 rounded-2xl border-2 border-slate-800 hover:border-slate-600 p-6 sm:p-7 shadow-sm hover:shadow-xl transition-all duration-200 flex flex-col justify-between space-y-5"
-          >
+          {/* Role 2: Executive Officer */}
+          <div className="border border-graphite-border bg-forest-dark p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-accent-orange/70 transition-colors">
             <div className="space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-slate-800 group-hover:bg-slate-700 flex items-center justify-center transition-colors">
-                <Shield className="w-6 h-6 text-emerald-400" />
+              <div className="flex items-center justify-between pb-3 border-b border-graphite-border/60">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-accent-orange font-bold">
+                  Field Enforcement
+                </span>
+                <span className="font-mono text-[10px] text-sage-muted">Role: Executive Officer</span>
               </div>
-              <div>
-                <div className="flex items-center space-x-2">
-                  <h2 className="text-lg font-bold text-white">Government Authority</h2>
-                  <span className="text-[10px] font-semibold bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                    Operations
-                  </span>
-                </div>
-                <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                  Field officer console to review incident intelligence, assign inspection wings, log enforcement notices, and track penalties.
-                </p>
+              <h2 className="font-serif text-xl sm:text-2xl text-ivory-warm">
+                Executive Officer Console
+              </h2>
+              <p className="text-xs font-mono text-sage-muted leading-relaxed">
+                Field investigation dashboard for evaluating CPCB sensor anomalies, dispatching inspection squads, logging statutory notices, and issuing penalties.
+              </p>
+              <div className="bg-forest-charcoal border border-graphite-border p-3 text-[11px] font-mono text-sage-muted space-y-1">
+                <span className="text-accent-orange uppercase font-bold block text-[10px]">Test Account:</span>
+                <div>officer@mpcb.gov.in / officer123</div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-800 space-y-3">
-              <div className="text-[11px] text-slate-400">
-                <p className="font-semibold text-slate-400 text-xs mb-0.5">Demo credentials</p>
-                <p><span className="font-mono text-slate-400">officer@mpcb.gov.in</span> / <span className="font-mono text-slate-400">officer123</span></p>
-              </div>
-              <div className="flex items-center justify-between text-xs font-semibold text-emerald-400 group-hover:text-emerald-300">
-                <span>Sign in as Authority</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-          </Link>
+            <Link
+              href="/login/government"
+              className="w-full inline-flex items-center justify-between bg-accent-orange hover:bg-accent-orange/90 text-forest-dark text-xs font-mono font-bold uppercase tracking-wider px-4 py-3 transition-colors"
+            >
+              <span>Sign In as Officer</span>
+              <ArrowRightRefinedIcon className="w-3.5 h-3.5" />
+            </Link>
+          </div>
 
-          {/* ── Regional Manager Card ────────────────────────────── */}
-          <Link
-            href="/login/regional-manager"
-            className="group bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-900 rounded-2xl border-2 border-indigo-800/60 hover:border-indigo-500 p-6 sm:p-7 shadow-sm hover:shadow-2xl transition-all duration-200 flex flex-col justify-between space-y-5"
-          >
+          {/* Role 3: Regional Manager */}
+          <div className="border border-graphite-border bg-forest-dark p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-accent-orange/70 transition-colors">
             <div className="space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-indigo-900/60 group-hover:bg-indigo-800/80 flex items-center justify-center transition-colors">
-                <Briefcase className="w-6 h-6 text-indigo-400" />
+              <div className="flex items-center justify-between pb-3 border-b border-graphite-border/60">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-accent-red font-bold">
+                  Executive Directorate
+                </span>
+                <span className="font-mono text-[10px] text-sage-muted">Role: Regional Manager</span>
               </div>
-              <div>
-                <div className="flex items-center space-x-2">
-                  <h2 className="text-lg font-bold text-white">Regional Manager</h2>
-                  <span className="text-[10px] font-semibold bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                    Executive
-                  </span>
-                </div>
-                <p className="text-xs text-indigo-200/70 mt-2 leading-relaxed">
-                  High-level oversight: dynamic daily & weekly briefings, multi-incident report generation, hotspot tracking, and regulatory audit.
-                </p>
+              <h2 className="font-serif text-xl sm:text-2xl text-ivory-warm">
+                Regional Manager Directorate
+              </h2>
+              <p className="text-xs font-mono text-sage-muted leading-relaxed">
+                Strategic oversight console: dynamic daily and weekly intelligence briefings, multi-incident consolidated compliance reports, and regional violation audit.
+              </p>
+              <div className="bg-forest-charcoal border border-graphite-border p-3 text-[11px] font-mono text-sage-muted space-y-1">
+                <span className="text-accent-orange uppercase font-bold block text-[10px]">Test Account:</span>
+                <div>manager@mpcb.gov.in / manager123</div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-indigo-900/60 space-y-3">
-              <div className="text-[11px] text-indigo-300/60">
-                <p className="font-semibold text-indigo-300 text-xs mb-0.5">Demo credentials</p>
-                <p><span className="font-mono text-indigo-300/80">manager@mpcb.gov.in</span> / <span className="font-mono text-indigo-300/80">manager123</span></p>
-              </div>
-              <div className="flex items-center justify-between text-xs font-semibold text-indigo-300 group-hover:text-indigo-200">
-                <span>Sign in as Manager</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-          </Link>
-
+            <Link
+              href="/login/regional-manager"
+              className="w-full inline-flex items-center justify-between bg-forest-charcoal hover:bg-graphite-deep border border-graphite-border hover:border-accent-orange text-ivory-warm text-xs font-mono font-bold uppercase tracking-wider px-4 py-3 transition-colors"
+            >
+              <span>Sign In as Regional Manager</span>
+              <ArrowRightRefinedIcon className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </div>
+      </main>
 
-        {/* Browse without logging in */}
-        <p className="text-center text-sm text-slate-400">
-          Exploring the demo?{' '}
-          <Link href="/citizen" className="text-emerald-600 hover:text-emerald-700 hover:underline font-medium transition-colors">
-            Browse public incident feed without logging in →
-          </Link>
-        </p>
-
-      </div>
+      <EditorialFooter />
     </div>
   );
 }

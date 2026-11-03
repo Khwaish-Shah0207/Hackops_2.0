@@ -3,39 +3,41 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import {
-  Users,
-  ArrowLeft,
-  Eye,
-  EyeOff,
-  CheckCircle2,
-  AlertCircle,
-  RefreshCw,
-} from 'lucide-react';
+import MainNavigation from '@/components/shared/MainNavigation';
+import EditorialFooter from '@/components/shared/EditorialFooter';
 import { storeAuth, isAuthenticated, type StoredUser } from '@/lib/auth';
+import { ArrowRightRefinedIcon } from '@/components/shared/CustomIcons';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 
 export default function CitizenLoginPage() {
   const router = useRouter();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
+  const [fullName, setFullName] = useState('');
+  const [organization, setOrganization] = useState('');
+  const [email, setEmail] = useState('citizen@enviro.gov');
+  const [password, setPassword] = useState('citizen123');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Redirect already-authenticated users straight to the citizen portal.
   useEffect(() => {
     if (isAuthenticated()) {
       router.replace('/citizen');
     }
-  }, []);
+  }, [router]);
+
+  const handleFillDemo = () => {
+    setIsRegisterMode(false);
+    setEmail('citizen@enviro.gov');
+    setPassword('citizen123');
+    setError(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
-      setError('Please enter both email and password.');
+      setError('Please provide email address and password.');
       return;
     }
 
@@ -43,15 +45,26 @@ export default function CitizenLoginPage() {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`${API_BASE}/auth/login`, {
+      const endpoint = isRegisterMode ? `${API_BASE}/auth/register` : `${API_BASE}/auth/login`;
+      const bodyPayload = isRegisterMode
+        ? {
+            email: email.trim(),
+            password,
+            full_name: fullName.trim() || 'Citizen Reporter',
+            role: 'citizen',
+            organization: organization.trim() || undefined,
+          }
+        : { email: email.trim(), password };
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), password }),
+        body: JSON.stringify(bodyPayload),
       });
 
       if (!response.ok) {
-        const errData = await response.json().catch(() => ({ detail: 'Login failed.' }));
-        throw new Error(errData.detail || 'Incorrect email or password.');
+        const errData = await response.json().catch(() => ({ detail: 'Authentication failed.' }));
+        throw new Error(errData.detail || 'Incorrect credentials or account already registered.');
       }
 
       const data = (await response.json()) as {
@@ -59,146 +72,155 @@ export default function CitizenLoginPage() {
         user: StoredUser;
       };
 
-      // Store credentials so fetchApi() picks them up automatically.
       storeAuth(data.access_token, data.user);
       router.replace('/citizen');
     } catch (err: any) {
-      setError(err.message || 'Login failed. Please try again.');
+      setError(err.message || 'Login failed. Please verify credentials or connectivity.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-[calc(100vh-220px)] flex items-center justify-center py-12">
-      <div className="w-full max-w-md space-y-5">
+    <div className="min-h-screen bg-forest-charcoal text-ivory-warm selection:bg-accent-orange selection:text-ivory-warm flex flex-col justify-between">
+      <MainNavigation />
 
-        {/* Back navigation */}
-        <Link
-          href="/login"
-          className="inline-flex items-center space-x-2 text-sm text-slate-400 hover:text-slate-200 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to portal selection</span>
-        </Link>
+      <main className="max-w-md w-full mx-auto px-4 sm:px-6 py-24 space-y-6">
+        {/* Navigation Breadcrumb */}
+        <nav aria-label="Breadcrumb" className="flex items-center space-x-2 text-xs font-mono text-sage-muted">
+          <Link href="/login" className="hover:text-ivory-warm transition-colors">
+            Portals
+          </Link>
+          <span>/</span>
+          <span className="text-accent-orange font-bold">Citizen Authentication</span>
+        </nav>
 
-        {/* Login card */}
-        <div className="bg-slate-900 rounded-2xl border border-slate-800 shadow-sm overflow-hidden">
-
-          {/* Emerald top accent stripe */}
-          <div className="h-1.5 w-full bg-gradient-to-r from-emerald-500 to-teal-400" />
-
-          <div className="p-8 space-y-6">
-
-            {/* Header */}
-            <div className="space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center">
-                <Users className="w-6 h-6 text-emerald-700" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-extrabold text-white">Citizen Login</h1>
-                <p className="text-sm text-slate-400 mt-1 leading-relaxed">
-                  Sign in to submit complaints, track investigations, and submit resolution feedback.
-                </p>
-              </div>
+        {/* Login Container */}
+        <div className="border border-graphite-border bg-forest-dark p-6 sm:p-8 space-y-6">
+          <div className="space-y-2 pb-4 border-b border-graphite-border/60">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] text-accent-green uppercase tracking-widest font-bold">
+                Citizen Portal Gateway
+              </span>
+              <span className="font-mono text-[10px] text-sage-muted">Public Access</span>
             </div>
+            <h1 className="font-serif text-2xl text-ivory-warm">
+              {isRegisterMode ? 'Register Citizen Account' : 'Citizen Sign In'}
+            </h1>
+            <p className="text-xs font-mono text-sage-muted leading-relaxed">
+              Authenticate to log incident complaints, inspect evidence dossiers, and track remediation.
+            </p>
+          </div>
 
-            {/* Demo credentials hint */}
-            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 space-y-1.5">
-              <p className="text-xs font-semibold text-emerald-900">Demo Credentials</p>
-              <div className="text-xs text-emerald-800 font-mono space-y-0.5">
-                <p>Email: <span className="font-bold">citizen@enviro.gov</span></p>
-                <p>Password: <span className="font-bold">citizen123</span></p>
-              </div>
+          {/* Quick Demo Fill Pill */}
+          <div className="bg-forest-charcoal border border-graphite-border p-3 flex items-center justify-between text-xs font-mono">
+            <div>
+              <span className="text-sage-muted text-[10px] uppercase block">Seeded Demo Account</span>
+              <span className="text-ivory-warm font-bold">citizen@enviro.gov</span>
             </div>
+            <button
+              type="button"
+              onClick={handleFillDemo}
+              className="text-[11px] font-mono text-accent-orange hover:underline font-bold px-2 py-1 bg-graphite-deep border border-graphite-border"
+            >
+              Fill Demo Credentials
+            </button>
+          </div>
 
-            {/* Error message */}
-            {error && (
-              <div className="flex items-start space-x-2.5 bg-red-50 border border-red-200 rounded-xl p-3.5 text-sm text-red-700">
-                <AlertCircle className="w-4 h-4 shrink-0 text-red-500 mt-0.5" />
-                <span>{error}</span>
-              </div>
+          {error && (
+            <div className="bg-accent-red/10 border border-accent-red/40 p-3 text-xs font-mono text-accent-red">
+              {error}
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {isRegisterMode && (
+              <>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-mono uppercase text-sage-muted block">
+                    Full Legal / Public Name
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="e.g. Aarav Sharma"
+                    className="w-full px-3 py-2 bg-forest-charcoal border border-graphite-border text-ivory-warm text-xs font-mono focus:outline-none focus:border-accent-orange"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-mono uppercase text-sage-muted block">
+                    Resident Welfare Association / Locality
+                  </label>
+                  <input
+                    type="text"
+                    value={organization}
+                    onChange={(e) => setOrganization(e.target.value)}
+                    placeholder="e.g. Chembur Residents Forum"
+                    className="w-full px-3 py-2 bg-forest-charcoal border border-graphite-border text-ivory-warm text-xs font-mono focus:outline-none focus:border-accent-orange"
+                  />
+                </div>
+              </>
             )}
 
-            {/* Login form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-mono uppercase text-sage-muted block">
+                Email Address
+              </label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="citizen@enviro.gov"
+                className="w-full px-3 py-2 bg-forest-charcoal border border-graphite-border text-ivory-warm text-xs font-mono focus:outline-none focus:border-accent-orange"
+              />
+            </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  required
-                  autoFocus
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition"
-                />
-              </div>
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-mono uppercase text-sage-muted block">
+                Access Password
+              </label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full px-3 py-2 bg-forest-charcoal border border-graphite-border text-ivory-warm text-xs font-mono focus:outline-none focus:border-accent-orange"
+              />
+            </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    required
-                    autoComplete="current-password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full px-4 py-2.5 pr-11 rounded-xl border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition"
-                  />
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 transition-colors"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full mt-2 inline-flex items-center justify-center space-x-2 bg-accent-orange hover:bg-accent-orange/90 text-forest-dark py-3 text-xs font-mono font-bold uppercase tracking-wider transition-colors disabled:opacity-50"
+            >
+              <span>{loading ? 'Authenticating...' : isRegisterMode ? 'Complete Registration' : 'Sign In as Citizen'}</span>
+              <ArrowRightRefinedIcon className="w-3.5 h-3.5" />
+            </button>
+          </form>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm transition shadow-sm shadow-emerald-500/20 flex items-center justify-center space-x-2"
-              >
-                {loading ? (
-                  <>
-                    <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Signing in…</span>
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>Sign In to Citizen Portal</span>
-                  </>
-                )}
-              </button>
-
-            </form>
+          {/* Mode Toggle */}
+          <div className="pt-2 border-t border-graphite-border/60 flex items-center justify-between text-[11px] font-mono text-sage-muted">
+            <span>{isRegisterMode ? 'Already registered?' : 'Need a citizen account?'}</span>
+            <button
+              type="button"
+              onClick={() => {
+                setIsRegisterMode(!isRegisterMode);
+                setError(null);
+              }}
+              className="text-accent-orange hover:underline font-bold"
+            >
+              {isRegisterMode ? 'Sign In Instead' : 'Register New Account'}
+            </button>
           </div>
         </div>
+      </main>
 
-        {/* Switch portal link */}
-        <p className="text-center text-xs text-slate-400">
-          Are you a government authority?{' '}
-          <Link
-            href="/login/government"
-            className="text-slate-300 hover:text-white hover:underline font-medium transition-colors"
-          >
-            Switch to Authority Login →
-          </Link>
-        </p>
-
-      </div>
+      <EditorialFooter />
     </div>
   );
 }

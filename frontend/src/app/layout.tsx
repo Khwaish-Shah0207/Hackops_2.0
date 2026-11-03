@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import Navbar from '@/components/Navbar';
 
 export const metadata: Metadata = {
-  title: 'Environmental Intelligence & Compliance Management System',
-  description: 'Air pollution incident detection, source identification, and compliance tracking platform',
+  title: 'Environmental Intelligence & Compliance Management Platform',
+  description: 'Evidence-based multi-criteria source apportionment, Lagrangian backward trajectory modeling, and compliance decision support system.',
+  keywords: ['Air Pollution', 'Environmental Compliance', 'Source Apportionment', 'HYSPLIT Trajectory', 'CPCB AQI', 'EPA SPECIATE', 'Chemical Mass Balance'],
 };
 
 export default function RootLayout({
@@ -14,15 +14,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-white">
-        <Navbar />
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {children}
-        </main>
-        <footer className="bg-slate-900/80 border-t border-slate-800 py-6 mt-12 text-center text-xs text-slate-400">
-          <p>© 2026 Environmental Intelligence & Compliance System. Decision-support platform for municipal air quality & citizen incident tracking.</p>
-          <p className="mt-1 text-slate-500">Notice: This system provides explainable evidence-based decision support. It does not make automated legal declarations of guilt.</p>
-        </footer>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="min-h-screen bg-forest-charcoal text-ivory-warm antialiased selection:bg-accent-orange selection:text-ivory-warm">
+        {children}
       </body>
     </html>
   );

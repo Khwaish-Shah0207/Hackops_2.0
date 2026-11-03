@@ -1,39 +1,62 @@
+@import 'leaflet/dist/leaflet.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import 'leaflet/dist/leaflet.css';
+@layer base {
+  :root {
+    /* Architectural Environmental Palette */
+    --color-forest: #14251F;
+    --color-graphite: #252C28;
+    --color-ivory: #EAE8DF;
+    --color-sage: #A8B5A5;
+    --color-accent-orange: #C77B43;
+    --color-accent-red: #B65348;
+    --color-accent-green: #667B70;
 
-:root {
-  --foreground-rgb: 241, 245, 249;
-  --background-rgb: 11, 15, 25;
+    /* RGB Fallbacks for Tailwind rgb() variable support */
+    --foreground-rgb: 234, 232, 223;
+    --background-rgb: 20, 37, 31;
+
+    /* Typographic Hierarchy */
+    --font-manrope: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-source-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-dm-serif: 'DM Serif Display', Georgia, serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: #14251F;
+    color: #EAE8DF;
+    color-scheme: dark;
+  }
+
+  body {
+    color: #EAE8DF;
+    background-color: #14251F;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
 }
 
-html {
-  color-scheme: dark;
-}
-
-body {
-  color: #f1f5f9;
-  background-color: #0b0f19; /* slate-950 deep charcoal / near black */
-  min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-}
-
-/* Custom dark scrollbars */
+/* Restrained architectural scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
+
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #14251F;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #252C28;
   border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #A8B5A5;
 }
 
 /* Map marker styles */
@@ -42,22 +65,26 @@ body {
   height: 100%;
   z-index: 10;
   border-radius: 0.75rem;
-  background: #0b0f19 !important;
+  background: #14251F !important;
 }
 
-/* Dark mode styling for keyless OpenStreetMap tiles without any watermarks */
+/* Keyless dark architectural OpenStreetMap tile filter */
+.leaflet-tile-pane,
 .dark .leaflet-tile-pane {
-  filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+  filter: brightness(0.7) invert(1) contrast(2.5) hue-rotate(200deg) saturate(0.3);
 }
 
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip,
 .dark .leaflet-popup-content-wrapper,
 .dark .leaflet-popup-tip {
-  background: #1e293b !important;
-  color: #f1f5f9 !important;
-  border: 1px solid #334155 !important;
+  background: #252C28 !important;
+  color: #EAE8DF !important;
+  border: 1px solid #A8B5A5 !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
 }
 
+.leaflet-popup-content,
 .dark .leaflet-popup-content {
-  color: #f1f5f9 !important;
+  color: #EAE8DF !important;
 }
