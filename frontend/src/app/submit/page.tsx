@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { 
@@ -11,7 +11,11 @@ import {
   Send, 
   Info,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Mic,
+  MicOff,
+  Volume2,
+  RefreshCw
 } from 'lucide-react';
 import { fetchApi } from '@/lib/api';
 
@@ -40,6 +44,99 @@ export default function SubmitComplaintPage() {
   const [observedAt, setObservedAt] = useState(new Date().toISOString().slice(0, 16));
   const [imageUrl, setImageUrl] = useState('');
 
+  // Voice Input State
+  const [isListening, setIsListening] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(true);
+  const [voiceError, setVoiceError] = useState<string | null>(null);
+  const recognitionRef = useRef<any>(null);
+  const baseDescriptionRef = useRef<string>('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        setSpeechSupported(false);
+      }
+    }
+  }, []);
+
+  const startVoiceInput = () => {
+    if (typeof window === 'undefined') return;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    
+    if (!SpeechRecognition) {
+      setVoiceError('Voice recognition is not supported in this browser. Please type your description manually.');
+      return;
+    }
+
+    try {
+      setVoiceError(null);
+      baseDescriptionRef.current = description ? description.trim() + ' ' : '';
+      
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        setVoiceError(null);
+      };
+
+      recognition.onresult = (event: any) => {
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          } else {
+            interimTranscript += event.results[i][0].transcript;
+          }
+        }
+
+        const currentSpeech = (finalTranscript || interimTranscript).trim();
+        if (currentSpeech) {
+          setDescription(baseDescriptionRef.current + currentSpeech);
+        }
+      };
+
+      recognition.onerror = (event: any) => {
+        console.warn('Voice recognition error:', event.error);
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+          setVoiceError('Microphone permission was denied. Please allow microphone access in your browser settings to speak your report.');
+        } else if (event.error === 'no-speech') {
+          // Soft timeout, user was quiet
+        } else {
+          setVoiceError(`Voice input error (${event.error}). You can continue typing manually.`);
+        }
+        setIsListening(false);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (err: any) {
+      console.error('Failed to initialize speech recognition:', err);
+      setVoiceError('Unable to start voice recording. Please verify microphone permissions.');
+      setIsListening(false);
+    }
+  };
+
+  const stopVoiceInput = () => {
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+    setIsListening(false);
+  };
+
   const handleLocationSelect = (lat: number, lon: number) => {
     setLatitude(parseFloat(lat.toFixed(5)));
     setLongitude(parseFloat(lon.toFixed(5)));
@@ -48,6 +145,10 @@ export default function SubmitComplaintPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isListening) {
+      stopVoiceInput();
+    }
+
     if (!title.trim() || !description.trim()) {
       setErrorMsg('Please enter both a title and description of the incident.');
       return;
@@ -100,22 +201,24 @@ export default function SubmitComplaintPage() {
       </div>
 
       {errorMsg && (
-        <div className="bg-red-50 border border-red-200 p-4 rounded-xl flex items-center space-x-3 text-red-700 text-sm">
-          <AlertCircle className="w-5 h-5 shrink-0 text-red-500" />
+        <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm flex items-center space-x-2">
+          <AlertCircle className="w-5 h-5 shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
-      {/* Main Submission Form */}
+      {/* Main Reporting Form */}
       <form onSubmit={handleSubmit} className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+        
+        {/* Incident Details Section */}
         <div className="space-y-4">
-          <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-2">
-            1. Incident Details
+          <h2 className="text-lg font-bold text-slate-900">
+            1. Observation Details
           </h2>
 
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Complaint Title *
+              Incident Title / Headline *
             </label>
             <input
               type="text"
@@ -159,18 +262,94 @@ export default function SubmitComplaintPage() {
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Incident Description *
-            </label>
-            <textarea
-              required
-              rows={4}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe color of smoke (white/grey/black), smell, burning material, wind intensity, or any visible origins..."
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm leading-relaxed"
-            />
+          {/* Description Section with Voice Input Integration */}
+          <div className="space-y-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                Incident Description *
+              </label>
+
+              {/* Voice Input Microphone Button */}
+              {speechSupported ? (
+                <div className="flex items-center space-x-2">
+                  {isListening ? (
+                    <button
+                      type="button"
+                      onClick={stopVoiceInput}
+                      className="inline-flex items-center space-x-1.5 bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition animate-pulse"
+                      title="Click to stop voice recording"
+                    >
+                      <MicOff className="w-3.5 h-3.5" />
+                      <span>Recording Voice… (Click to Stop)</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={startVoiceInput}
+                      className="inline-flex items-center space-x-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+                      title="Speak your incident description instead of typing"
+                    >
+                      <Mic className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Voice Input (Speak Description)</span>
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <span className="text-[11px] text-slate-400 italic">
+                  (Voice input unavailable in current browser)
+                </span>
+              )}
+            </div>
+
+            {/* Voice Recording Active Banner */}
+            {isListening && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-center justify-between text-xs text-red-800">
+                <div className="flex items-center space-x-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping shrink-0" />
+                  <span>
+                    <b>Microphone active:</b> Speak clearly. Your spoken words are transcribing live into the description field below.
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={stopVoiceInput}
+                  className="underline font-bold text-red-900 shrink-0 ml-2"
+                >
+                  Done Speaking
+                </button>
+              </div>
+            )}
+
+            {/* Voice Permission / Device Error Banner */}
+            {voiceError && (
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start space-x-2 text-xs text-amber-800">
+                <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p>{voiceError}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setVoiceError(null)}
+                  className="text-amber-500 hover:text-amber-800 text-[10px] font-bold"
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
+
+            <div className="relative">
+              <textarea
+                required
+                rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Describe color of smoke (white/grey/black), smell, burning material, wind intensity, or any visible origins... (You can also use the microphone button above to speak)"
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm leading-relaxed"
+              />
+            </div>
+            <span className="text-[11px] text-slate-400 block">
+              Tip: You can speak your description, then manually edit or add any additional points before submitting.
+            </span>
           </div>
         </div>
 
@@ -262,4 +441,3 @@ export default function SubmitComplaintPage() {
     </div>
   );
 }
-

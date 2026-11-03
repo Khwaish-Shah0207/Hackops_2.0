@@ -36,6 +36,9 @@ class Complaint(Base):
     # Workflow Statuses: Reported -> Under Analysis -> Source Identified / Investigation Required -> Assigned -> Action Taken -> Resolved -> Closed
     status = Column(String(50), default="Reported", nullable=False)
     is_demo = Column(Boolean, default=False)
+    severity = Column(String(50), default="Moderate", nullable=True)
+    severity_score = Column(Float, default=50.0, nullable=True)
+    severity_assessment = Column(JSON, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
@@ -266,3 +269,18 @@ class CitizenFeedback(Base):
     citizen = relationship("User", back_populates="feedback")
     complaint = relationship("Complaint", back_populates="feedback")
 
+
+
+class RegionalReport(Base):
+    __tablename__ = "regional_reports"
+
+    id = Column(Integer, primary_key=True, index=True)
+    report_number = Column(String(50), unique=True, index=True, nullable=False) # e.g. REG-REP-2026-0001
+    title = Column(String(255), nullable=False)
+    incident_ids = Column(JSON, nullable=False) # list of incident IDs e.g. [1, 4]
+    report_type = Column(String(50), default="consolidated") # "individual" | "consolidated"
+    generated_by = Column(String(255), nullable=False)
+    summary = Column(Text, nullable=False)
+    compliance_observations = Column(Text, nullable=True)
+    content = Column(JSON, nullable=False) # structured incident analysis and facts
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)

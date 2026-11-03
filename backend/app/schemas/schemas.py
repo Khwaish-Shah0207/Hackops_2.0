@@ -166,6 +166,9 @@ class ComplaintResponse(BaseModel):
     status: str
     image_url: Optional[str] = None
     is_demo: bool
+    severity: Optional[str] = "Moderate"
+    severity_score: Optional[float] = 50.0
+    severity_assessment: Optional[Dict[str, Any]] = None
     created_at: datetime.datetime
     updated_at: datetime.datetime
 

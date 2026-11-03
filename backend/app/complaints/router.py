@@ -55,6 +55,18 @@ def submit_complaint(
     )
     db.add(history)
     db.commit()
+
+    # Intelligent Incident Severity Assessment
+    try:
+        from app.severity.engine import IntelligentSeverityEngine
+        sev, sev_score, sev_data = IntelligentSeverityEngine.assess_incident(db, complaint)
+        complaint.severity = sev
+        complaint.severity_score = sev_score
+        complaint.severity_assessment = sev_data
+        db.commit()
+        db.refresh(complaint)
+    except Exception as exc:
+        print(f"Error calculating incident severity: {exc}")
     
     # Trigger Source Investigation Workflow
     try:

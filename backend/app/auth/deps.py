@@ -43,3 +43,13 @@ def get_current_government_user(
         )
     return user
 
+
+def get_current_regional_manager_user(
+    user: User = Depends(get_current_user)
+) -> User:
+    if user.role not in ["regional_manager", "admin"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access forbidden: Regional Manager role required"
+        )
+    return user
