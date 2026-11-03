@@ -8,6 +8,7 @@ from app.complaints.router import router as complaints_router
 from app.government.router import router as government_router
 from app.feedback.router import router as feedback_router
 from app.environmental_data.router import router as environmental_router
+from app.regional.router import router as regional_router
 
 # Initialize database schema
 Base.metadata.create_all(bind=engine)
@@ -17,6 +18,15 @@ app = FastAPI(
     version=settings.VERSION,
     description="Air Pollution Incident Detection, Source Identification, and Compliance Tracking API"
 )
+
+@app.on_event("startup")
+def on_startup():
+    Base.metadata.create_all(bind=engine)
+    try:
+        from seed_data import seed_database
+        seed_database()
+    except Exception as e:
+        print(f"Startup seeding notice: {e}")
 
 # Enable CORS for Next.js frontend
 app.add_middleware(
@@ -33,6 +43,7 @@ app.include_router(complaints_router, prefix=settings.API_V1_STR)
 app.include_router(government_router, prefix=settings.API_V1_STR)
 app.include_router(feedback_router, prefix=settings.API_V1_STR)
 app.include_router(environmental_router, prefix=settings.API_V1_STR)
+app.include_router(regional_router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():
@@ -53,4 +64,3 @@ def root():
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
-

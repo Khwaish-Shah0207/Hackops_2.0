@@ -8,25 +8,39 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
+        forest: {
+          charcoal: '#14251F',
+          dark: '#0E1A15',
         },
-        slate: {
-          850: '#151e2e',
-          950: '#0b0f19',
-        }
+        graphite: {
+          deep: '#252C28',
+          mid: '#2F3833',
+          border: '#3D4741',
+        },
+        ivory: {
+          warm: '#EAE8DF',
+          light: '#F4F3EE',
+          dark: '#D8D6CC',
+          border: '#CBC8BD',
+        },
+        sage: {
+          muted: '#A8B5A5',
+          dark: '#7D8C7A',
+          light: '#C4CDC2',
+        },
+        accent: {
+          orange: '#C77B43',
+          red: '#B65348',
+          green: '#667B70',
+          amber: '#B8863A',
+        },
+      },
+      fontFamily: {
+        sans: ['var(--font-manrope)', 'Manrope', 'Source Sans 3', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        serif: ['var(--font-dm-serif)', 'DM Serif Display', 'Georgia', 'serif'],
+        mono: ['Courier New', 'monospace'],
       },
     },
   },
   plugins: [],
-}
-
+};

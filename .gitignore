@@ -72,3 +72,5 @@ tmp/
 htmlcov/
 .coverage
 coverage.xml
+
+*.tsbuildinfo
